@@ -1,5 +1,4 @@
-import static edu.rice.pcdp.PCDP.finish;
-import static edu.rice.pcdp.PCDP.async;
+import static edu.rice.pcdp.PCDP.*;
 
 /**
  * A simple class for testing compilation of an PCDP project.
