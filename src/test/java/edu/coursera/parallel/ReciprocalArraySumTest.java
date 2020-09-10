@@ -1,3 +1,5 @@
+package edu.coursera.parallel;
+
 import java.util.Random;
 
 import junit.framework.TestCase;

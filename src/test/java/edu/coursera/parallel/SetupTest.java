@@ -1,3 +1,5 @@
+package edu.coursera.parallel;
+
 import junit.framework.TestCase;
 
 public class SetupTest extends TestCase {
