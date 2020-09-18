@@ -1,12 +1,18 @@
 import java.util.concurrent.ForkJoinPool;
 
+import static edu.rice.pcdp.PCDP.isolated;
+
 public class entry {
 
+    volatile int test;
     public static void main(String... args) {
-        ForkJoinPool pool = new ForkJoinPool();
-        System.out.println("Entrando");
-        int n = pool.invoke(new FibonacciFuture(20));
-        System.out.println("Saliendo");
-        System.out.println(n);
+        System.out.println(calculateAcceleration(2.0, 0.39, 7.1));
+        isolated(() -> {
+
+        });
+    }
+
+    public static double calculateAcceleration(double x, double vI, double t) {
+        return 2 * ((x - vI * t) / (t * t));
     }
 }
