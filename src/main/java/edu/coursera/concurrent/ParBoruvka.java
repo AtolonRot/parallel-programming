@@ -28,11 +28,11 @@ public final class ParBoruvka extends AbstractBoruvka<ParBoruvka.ParComponent> {
     @Override
     public void computeBoruvka(final Queue<ParComponent> nodesLoaded,
                                final SolutionToBoruvka<ParComponent> solution) {
-        final int numThreads = getNCores();
-        final Thread[] threads = new Thread[numThreads];
+      //  final int numThreads = getNCores();
+      //  final Thread[] threads = new Thread[numThreads];
 
-        for (int i = 0; i < numThreads; i++) {
-            threads[i] = new Thread(() -> {
+       // for (int i = 0; i < numThreads; i++) {
+       //     threads[i] = new Thread(() -> {
                 ParComponent n;
 
                 while ((n = nodesLoaded.poll()) != null) {
@@ -73,11 +73,11 @@ public final class ParBoruvka extends AbstractBoruvka<ParBoruvka.ParComponent> {
                     other.lock.unlock();
                     nodesLoaded.add(n);
                 }
-            });
-            threads[i].start();
-        }
+         //   });
+           // threads[i].start();
+       // }
 
-        for (int i = 0; i < numThreads; i++) {
+      /*  for (int i = 0; i < numThreads; i++) {
             while (true) {
                 try {
                     threads[i].join();
@@ -86,7 +86,7 @@ public final class ParBoruvka extends AbstractBoruvka<ParBoruvka.ParComponent> {
 
                 }
             }
-        }
+        } */
     }
 
     private static int getNCores() {
