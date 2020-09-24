@@ -30,7 +30,6 @@ public final class ParBoruvka extends AbstractBoruvka<ParBoruvka.ParComponent> {
                                final SolutionToBoruvka<ParComponent> solution) {
         final int numThreads = getNCores();
         final Thread[] threads = new Thread[numThreads];
-        final ParComponent[] result = new ParComponent[1];
 
         for (int i = 0; i < numThreads; i++) {
             threads[i] = new Thread(() -> {
@@ -38,25 +37,30 @@ public final class ParBoruvka extends AbstractBoruvka<ParBoruvka.ParComponent> {
 
                 while ((n = nodesLoaded.poll()) != null) {
 
-                    if (n.isDead) continue;
                     if (!n.lock.tryLock()) continue;
+
+                    if(n.isDead) {
+                        n.lock.unlock();
+                        continue;
+                    }
 
                     final Edge<ParComponent> e = n.getMinEdge();
                     if (e == null) {
-                        result[0] = n;
+                        solution.setSolution(n);
                         break;
                     }
 
                     final ParComponent other = e.getOther(n);
 
-                    if (other.isDead) {
-                        other.lock.unlock();
+
+                    if (!other.lock.tryLock()) {
                         n.lock.unlock();
                         nodesLoaded.add(n);
                         continue;
                     }
 
-                    if (!other.lock.tryLock()) {
+                    if (other.isDead) {
+                        other.lock.unlock();
                         n.lock.unlock();
                         nodesLoaded.add(n);
                         continue;
@@ -77,6 +81,7 @@ public final class ParBoruvka extends AbstractBoruvka<ParBoruvka.ParComponent> {
             while (true) {
                 try {
                     threads[i].join();
+                    break;
                 } catch (final InterruptedException e) {
 
                 }
@@ -100,7 +105,7 @@ public final class ParBoruvka extends AbstractBoruvka<ParBoruvka.ParComponent> {
      */
     public static final class ParComponent extends Component<ParComponent> {
 
-        public final ReentrantLock lock;
+        public final ReentrantLock lock = new ReentrantLock();
 
         /**
          * A unique identifier for this component in the graph that contains
@@ -139,7 +144,6 @@ public final class ParBoruvka extends AbstractBoruvka<ParBoruvka.ParComponent> {
          */
         public ParComponent(final int setNodeId) {
             super();
-            this.lock = new ReentrantLock();
             this.nodeId = setNodeId;
         }
 
