@@ -46,6 +46,7 @@ public final class FileServer {
 
             InputStream stream = s.getInputStream();
             InputStreamReader reader = new InputStreamReader(stream);
+
             BufferedReader bufferedReader = new BufferedReader(reader);
 
             String line = bufferedReader.readLine();
@@ -90,8 +91,7 @@ public final class FileServer {
                 printWriter.write("\r\n");
             }
 
-            s.close();
-            out.flush();
+            printWriter.close();
         }
     }
 }
