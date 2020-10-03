@@ -3,6 +3,8 @@ package edu.coursera.distributed;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * A basic and very limited implementation of a file server that responds to GET
@@ -20,7 +22,7 @@ public final class FileServer {
      *                     implementation is not expected to ever throw
      *                     IOExceptions during normal operation.
      */
-    public void run(final ServerSocket socket, final PCDPFilesystem fs)
+    public void run(final ServerSocket socket, final PCDPFilesystem fs, final int ncores)
             throws IOException {
         /*
          * Enter a spin loop for handling client requests to the provided
@@ -31,8 +33,11 @@ public final class FileServer {
             // TODO Delete this once you start working on your solution.
          //   throw new UnsupportedOperationException();
 
-            // TODO 1) Use socket.accept to get a Socket object
             Socket s = socket.accept();
+            // TODO 1) Use socket.accept to get a Socket object
+            final ExecutorService executorService = Executors.newFixedThreadPool(ncores);
+            executorService.submit(() -> {
+
 
             /*
              * TODO 2) Using Socket.getInputStream(), parse the received HTTP
@@ -43,6 +48,8 @@ public final class FileServer {
              *
              *     GET /path/to/file HTTP/1.1
              */
+
+                try {
 
             InputStream stream = s.getInputStream();
             InputStreamReader reader = new InputStreamReader(stream);
@@ -92,6 +99,9 @@ public final class FileServer {
             }
 
             printWriter.close();
+                } catch (IOException e) {
+                }
+            });
         }
     }
 }
