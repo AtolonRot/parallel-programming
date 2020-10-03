@@ -56,17 +56,17 @@ public final class PageRank {
         JavaPairRDD<Integer, Double> newRanks =
                 sites.join(ranks)
                         .flatMapToPair(kv -> {
-                            Integer websiteId = kv._1();
-                            Tuple2<Website, Double> value = kv._2();
+                         //   Integer websiteId = kv._1();
+                         //   Tuple2<Website, Double> value = kv._2();
                             Website edges = kv._2()._1();
-                            double currentRank = kv._2()._2();
+                            Double currentRank = kv._2()._2();
 
                             List<Tuple2<Integer, Double>> contribs =
                                     new LinkedList<>();
                             Iterator<Integer> iter = edges.edgeIterator();
                             while (iter.hasNext()) {
                                 final int target = iter.next();
-                                contribs.add(new Tuple2(target, currentRank / (double) edges.getNEdges()));
+                                contribs.add(new Tuple2<>(target, currentRank / (double) edges.getNEdges()));
                             }
                             return contribs;
                         });

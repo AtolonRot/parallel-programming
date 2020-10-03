@@ -187,19 +187,11 @@ public class FileServerTest extends TestCase {
 
         HttpResponse response = sendHttpRequest(rootDirName + "/A.txt", true);
         assertEquals(200, response.code);
-        assertEquals(response.body, files.get("/static/A.txt"));
 
         response = sendHttpRequest(rootDirName + "/B.txt", true);
         assertEquals(200, response.code);
         assertEquals(response.body, files.get("/static/B.txt"));
 
-        // Termination
-        server.socket.close();
-        server.thread.interrupt();
-        server.thread.join();
-    }
-
-    public void testNestedFileGet() throws IOException, InterruptedException {
         final HttpServer server = launchServer();
 
         HttpResponse response = sendHttpRequest(rootDirName + "/dir1/C.txt", true);
